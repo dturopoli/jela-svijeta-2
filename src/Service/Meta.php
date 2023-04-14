@@ -68,6 +68,10 @@ class Meta
     
     private function setTotalPages(): void
     {
+        if ($this->totalItems === 0 || $this->itemsPerPage === 0) {
+            $this->totalPages = 1;
+            return;
+        }
         $this->totalPages = ceil($this->totalItems / $this->itemsPerPage);
     }
 }
