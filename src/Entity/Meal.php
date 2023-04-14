@@ -1,0 +1,172 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\MealRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
+#[ORM\Entity(repositoryClass: MealRepository::class)]
+class Meal
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+    
+    #[ORM\ManyToOne(inversedBy: 'meals')]
+    private ?Category $category = null;
+    
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $created = null;
+    
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $updated = null;
+    
+    #[Gedmo\Timestampable(on: 'delete')]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $deleted = null;
+
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTranslation::class, orphanRemoval: true)]
+    private Collection $mealTranslations;
+
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTag::class, orphanRemoval: true)]
+    private Collection $mealTags;
+
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealIngredient::class, orphanRemoval: true)]
+    private Collection $mealIngredients;
+
+    public function __construct()
+    {
+        $this->mealTranslations = new ArrayCollection();
+        $this->mealTags = new ArrayCollection();
+        $this->mealIngredients = new ArrayCollection();
+    }
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+    
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+        
+        return $this;
+    }
+    
+    public function getCreated(): ?\DateTimeImmutable
+    {
+        return $this->created;
+    }
+    
+    public function getUpdated(): ?\DateTimeImmutable
+    {
+        return $this->updated;
+    }
+    
+    public function getDeleted(): ?\DateTimeImmutable
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @return Collection<int, MealTranslation>
+     */
+    public function getMealTranslations(): Collection
+    {
+        return $this->mealTranslations;
+    }
+
+    public function addMealTranslation(MealTranslation $mealTranslation): self
+    {
+        if (!$this->mealTranslations->contains($mealTranslation)) {
+            $this->mealTranslations->add($mealTranslation);
+            $mealTranslation->setMeal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMealTranslation(MealTranslation $mealTranslation): self
+    {
+        if ($this->mealTranslations->removeElement($mealTranslation)) {
+            // set the owning side to null (unless already changed)
+            if ($mealTranslation->getMeal() === $this) {
+                $mealTranslation->setMeal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MealTag>
+     */
+    public function getMealTags(): Collection
+    {
+        return $this->mealTags;
+    }
+
+    public function addMealTag(MealTag $mealTag): self
+    {
+        if (!$this->mealTags->contains($mealTag)) {
+            $this->mealTags->add($mealTag);
+            $mealTag->setMeal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMealTag(MealTag $mealTag): self
+    {
+        if ($this->mealTags->removeElement($mealTag)) {
+            // set the owning side to null (unless already changed)
+            if ($mealTag->getMeal() === $this) {
+                $mealTag->setMeal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MealIngredient>
+     */
+    public function getMealIngredients(): Collection
+    {
+        return $this->mealIngredients;
+    }
+
+    public function addMealIngredient(MealIngredient $mealIngredient): self
+    {
+        if (!$this->mealIngredients->contains($mealIngredient)) {
+            $this->mealIngredients->add($mealIngredient);
+            $mealIngredient->setMeal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMealIngredient(MealIngredient $mealIngredient): self
+    {
+        if ($this->mealIngredients->removeElement($mealIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($mealIngredient->getMeal() === $this) {
+                $mealIngredient->setMeal(null);
+            }
+        }
+
+        return $this;
+    }
+}
