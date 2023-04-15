@@ -42,8 +42,6 @@ class Meal
         $this->mealTranslations = new ArrayCollection();
         $this->mealTags = new ArrayCollection();
         $this->mealIngredients = new ArrayCollection();
-        $this->setCreatedAt(new \DateTime());
-        $this->setUpdatedAt(new \DateTime());
     }
     
     public function getId(): ?int

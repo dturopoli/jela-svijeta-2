@@ -26,41 +26,40 @@ class CategoryTranslationFixtures extends Fixture implements DependentFixtureInt
         $mainCourse = $this->getReference(CategoryFixtures::MAIN_COURSE_REFERENCE);
         $dessert = $this->getReference(CategoryFixtures::DESSERT_REFERENCE);
         
-        $enAppetizer = new CategoryTranslation();
-        $enAppetizer->setCategory($appetizer);
-        $enAppetizer->setLanguage($en);
-        $enAppetizer->setTitle('Appetizer');
-        $manager->persist($enAppetizer);
+        $data = [
+            [
+                'category' => $appetizer,
+                'titleEn' => 'Appetizer',
+                'titleHr' => 'Predjelo',
+            ],
+            [
+                'category' => $mainCourse,
+                'titleEn' => 'Main course',
+                'titleHr' => 'Glavno jelo',
+            ],
+            [
+                'category' => $dessert,
+                'titleEn' => 'Dessert',
+                'titleHr' => 'Desert',
+            ],
+        ];
         
-        $hrAppetizer = new CategoryTranslation();
-        $hrAppetizer->setCategory($appetizer);
-        $hrAppetizer->setLanguage($hr);
-        $hrAppetizer->setTitle('Predjelo');
-        $manager->persist($hrAppetizer);
-        
-        $enMainCourse = new CategoryTranslation();
-        $enMainCourse->setCategory($mainCourse);
-        $enMainCourse->setLanguage($en);
-        $enMainCourse->setTitle('Main course');
-        $manager->persist($enMainCourse);
-        
-        $hrMainCourse = new CategoryTranslation();
-        $hrMainCourse->setCategory($mainCourse);
-        $hrMainCourse->setLanguage($hr);
-        $hrMainCourse->setTitle('Glavno jelo');
-        $manager->persist($hrMainCourse);
-        
-        $enDessert = new CategoryTranslation();
-        $enDessert->setCategory($dessert);
-        $enDessert->setLanguage($en);
-        $enDessert->setTitle('Dessert');
-        $manager->persist($enDessert);
-        
-        $hrDessert = new CategoryTranslation();
-        $hrDessert->setCategory($dessert);
-        $hrDessert->setLanguage($hr);
-        $hrDessert->setTitle('Desert');
-        $manager->persist($hrDessert);
+        foreach ($data as $row) {
+            $enCategory = new CategoryTranslation();
+            $hrCategory = new CategoryTranslation();
+            
+            $enCategory->setLanguage($en);
+            $hrCategory->setLanguage($hr);
+            
+            $enCategory->setCategory($row['category']);
+            $hrCategory->setCategory($row['category']);
+            
+            $enCategory->setTitle($row['titleEn']);
+            $hrCategory->setTitle($row['titleHr']);
+            
+            $manager->persist($enCategory);
+            $manager->persist($hrCategory);
+        }
         
         $manager->flush();
     }

@@ -32,101 +32,65 @@ class IngredientTranslationFixtures extends Fixture implements DependentFixtureI
         $strawberry = $this->getReference(IngredientFixtures::STRAWBERRY_REFERENCE);
         $kiwi = $this->getReference(IngredientFixtures::KIWI_REFERENCE);
         
-        $enEgg = new IngredientTranslation();
-        $enEgg->setIngredient($egg);
-        $enEgg->setLanguage($en);
-        $enEgg->setTitle('Egg');
-        $manager->persist($enEgg);
+        $data = [
+            [
+                'ingredient' => $egg,
+                'titleEn' => 'Egg',
+                'titleHr' => 'Jaje',
+            ],
+            [
+                'ingredient' => $milk,
+                'titleEn' => 'Milk',
+                'titleHr' => 'Mlijeko',
+            ],
+            [
+                'ingredient' => $cheese,
+                'titleEn' => 'Cheese',
+                'titleHr' => 'Sir',
+            ],
+            [
+                'ingredient' => $pasta,
+                'titleEn' => 'Pasta',
+                'titleHr' => 'Tjestenina',
+            ],
+            [
+                'ingredient' => $sunflowerOil,
+                'titleEn' => 'Sunflower oil',
+                'titleHr' => 'Suncokretovo ulje',
+            ],
+            [
+                'ingredient' => $chocolate,
+                'titleEn' => 'Chocolate',
+                'titleHr' => 'Čokolada',
+            ],
+            [
+                'ingredient' => $strawberry,
+                'titleEn' => 'Strawberry',
+                'titleHr' => 'Jagoda',
+            ],
+            [
+                'ingredient' => $kiwi,
+                'titleEn' => 'Kiwi',
+                'titleHr' => 'Kivi',
+            ],
+        ];
         
-        $hrEgg = new IngredientTranslation();
-        $hrEgg->setIngredient($egg);
-        $hrEgg->setLanguage($hr);
-        $hrEgg->setTitle('Jaje');
-        $manager->persist($hrEgg);
-        
-        $enMilk = new IngredientTranslation();
-        $enMilk->setIngredient($milk);
-        $enMilk->setLanguage($en);
-        $enMilk->setTitle('Milk');
-        $manager->persist($enMilk);
-        
-        $hrMilk = new IngredientTranslation();
-        $hrMilk->setIngredient($milk);
-        $hrMilk->setLanguage($hr);
-        $hrMilk->setTitle('Mlijeko');
-        $manager->persist($hrMilk);
-        
-        $enCheese = new IngredientTranslation();
-        $enCheese->setIngredient($cheese);
-        $enCheese->setLanguage($en);
-        $enCheese->setTitle('Cheese');
-        $manager->persist($enCheese);
-        
-        $hrCheese = new IngredientTranslation();
-        $hrCheese->setIngredient($cheese);
-        $hrCheese->setLanguage($hr);
-        $hrCheese->setTitle('Sir');
-        $manager->persist($hrCheese);
-        
-        $enPasta = new IngredientTranslation();
-        $enPasta->setIngredient($pasta);
-        $enPasta->setLanguage($en);
-        $enPasta->setTitle('Pasta');
-        $manager->persist($enPasta);
-        
-        $hrPasta = new IngredientTranslation();
-        $hrPasta->setIngredient($pasta);
-        $hrPasta->setLanguage($hr);
-        $hrPasta->setTitle('Tjestenina');
-        $manager->persist($hrPasta);
-        
-        $enSunflowerOil = new IngredientTranslation();
-        $enSunflowerOil->setIngredient($sunflowerOil);
-        $enSunflowerOil->setLanguage($en);
-        $enSunflowerOil->setTitle('Sunflower oil');
-        $manager->persist($enSunflowerOil);
-        
-        $hrSunflowerOil = new IngredientTranslation();
-        $hrSunflowerOil->setIngredient($sunflowerOil);
-        $hrSunflowerOil->setLanguage($hr);
-        $hrSunflowerOil->setTitle('Suncokretovo ulje');
-        $manager->persist($hrSunflowerOil);
-        
-        $enChocolate = new IngredientTranslation();
-        $enChocolate->setIngredient($chocolate);
-        $enChocolate->setLanguage($en);
-        $enChocolate->setTitle('Chocolate');
-        $manager->persist($enChocolate);
-        
-        $hrChocolate = new IngredientTranslation();
-        $hrChocolate->setIngredient($chocolate);
-        $hrChocolate->setLanguage($hr);
-        $hrChocolate->setTitle('Čokolada');
-        $manager->persist($hrChocolate);
-        
-        $enStrawberry = new IngredientTranslation();
-        $enStrawberry->setIngredient($strawberry);
-        $enStrawberry->setLanguage($en);
-        $enStrawberry->setTitle('Strawberry');
-        $manager->persist($enStrawberry);
-        
-        $hrStrawberry = new IngredientTranslation();
-        $hrStrawberry->setIngredient($strawberry);
-        $hrStrawberry->setLanguage($hr);
-        $hrStrawberry->setTitle('Jagoda');
-        $manager->persist($hrStrawberry);
-        
-        $enKiwi = new IngredientTranslation();
-        $enKiwi->setIngredient($kiwi);
-        $enKiwi->setLanguage($en);
-        $enKiwi->setTitle('Kiwi');
-        $manager->persist($enKiwi);
-        
-        $hrKiwi = new IngredientTranslation();
-        $hrKiwi->setIngredient($kiwi);
-        $hrKiwi->setLanguage($hr);
-        $hrKiwi->setTitle('Kivi');
-        $manager->persist($hrKiwi);
+        foreach ($data as $row) {
+            $enIngredient = new IngredientTranslation();
+            $hrIngredient = new IngredientTranslation();
+            
+            $enIngredient->setLanguage($en);
+            $hrIngredient->setLanguage($hr);
+            
+            $enIngredient->setIngredient($row['ingredient']);
+            $hrIngredient->setIngredient($row['ingredient']);
+            
+            $enIngredient->setTitle($row['titleEn']);
+            $hrIngredient->setTitle($row['titleHr']);
+            
+            $manager->persist($enIngredient);
+            $manager->persist($hrIngredient);
+        }
         
         $manager->flush();
     }

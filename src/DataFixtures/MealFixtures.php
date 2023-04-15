@@ -31,33 +31,49 @@ class MealFixtures extends Fixture implements DependentFixtureInterface
         $dessert = $this->getReference(CategoryFixtures::DESSERT_REFERENCE);
         
         $friedEggs = new Meal();
+        $friedEggs->setCreatedAt(new \DateTime());
+        $friedEggs->setUpdatedAt(new \DateTime());
         $manager->persist($friedEggs);
         
         $friedEggsWithCheese = new Meal();
+        $friedEggsWithCheese->setCreatedAt(new \DateTime());
+        $friedEggsWithCheese->setUpdatedAt(new \DateTime());
         $manager->persist($friedEggsWithCheese);
         
         $pastaWithEggsAndCheese = new Meal();
         $pastaWithEggsAndCheese->setCategory($mainCourse);
+        $pastaWithEggsAndCheese->setCreatedAt(new \DateTime());
+        $pastaWithEggsAndCheese->setUpdatedAt(new \DateTime());
         $manager->persist($pastaWithEggsAndCheese);
         
         $pastaWithEggs = new Meal();
         $pastaWithEggs->setCategory($mainCourse);
+        $pastaWithEggs->setCreatedAt(new \DateTime());
+        $pastaWithEggs->setUpdatedAt(new \DateTime());
         $manager->persist($pastaWithEggs);
         
         $chocoCake = new Meal();
         $chocoCake->setCategory($dessert);
+        $chocoCake->setCreatedAt(new \DateTime());
+        $chocoCake->setUpdatedAt(new \DateTime());
         $manager->persist($chocoCake);
         
         $strawberryCake = new Meal();
         $strawberryCake->setCategory($dessert);
+        $strawberryCake->setCreatedAt(new \DateTime());
+        $strawberryCake->setUpdatedAt(new \DateTime());
         $manager->persist($strawberryCake);
         
         $fruitSalad = new Meal();
         $fruitSalad->setCategory($dessert);
+        $fruitSalad->setCreatedAt(new \DateTime());
+        $fruitSalad->setUpdatedAt(new \DateTime());
         $manager->persist($fruitSalad);
         
         $chocoStrawberry = new Meal();
         $chocoStrawberry->setCategory($dessert);
+        $chocoStrawberry->setCreatedAt(new \DateTime());
+        $chocoStrawberry->setUpdatedAt(new \DateTime());
         $manager->persist($chocoStrawberry);
         
         $manager->flush();
