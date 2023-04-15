@@ -42,15 +42,19 @@ class MealRepository extends ServiceEntityRepository
     /**
      * @return Meal[] Returns an array of Meal objects
      */
-    public function findByExampleField($value): array
+    public function findMealWithIngredients($mealId): array
     {
         return $this->createQueryBuilder('m')
-            ->select('m', 'mi')
+            ->select('m', 'mi', 'i', 'it', 'mt')
             ->leftJoin('m.mealIngredients', 'mi')
-            ->andWhere('m.category = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
+            ->leftJoin('mi.ingredient', 'i')
+            ->leftJoin('i.ingredientTranslations', 'it')
+            ->leftJoin('m.mealTranslations', 'mt')
+            ->andWhere('m.id = :mealId')
+            ->andWhere('mt.language = :lan')
+            ->andWhere('it.language = :lan')
+            ->setParameter('mealId', $mealId)
+            ->setParameter('lan', 'en')
             ->getQuery()
             ->getResult();
     }
