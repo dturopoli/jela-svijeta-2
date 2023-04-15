@@ -11,22 +11,21 @@ use Doctrine\ORM\Mapping as ORM;
 class Language
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(length: 5)]
-    private ?string $id = null;
+    private string $id = '';
     
     #[ORM\Column(length: 30)]
     private ?string $name = null;
     
     #[ORM\OneToMany(mappedBy: 'language', targetEntity: CategoryTranslation::class, orphanRemoval: true)]
     private Collection $categoryTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'language', targetEntity: MealTranslation::class, orphanRemoval: true)]
     private Collection $mealTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'language', targetEntity: TagTranslation::class, orphanRemoval: true)]
     private Collection $tagTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'language', targetEntity: IngredientTranslation::class, orphanRemoval: true)]
     private Collection $ingredientTranslations;
     
@@ -41,6 +40,13 @@ class Language
     public function getId(): ?int
     {
         return $this->id;
+    }
+    
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        
+        return $this;
     }
     
     public function getName(): ?string
@@ -84,7 +90,7 @@ class Language
         
         return $this;
     }
-
+    
     /**
      * @return Collection<int, MealTranslation>
      */
@@ -92,17 +98,17 @@ class Language
     {
         return $this->mealTranslations;
     }
-
+    
     public function addMealTranslation(MealTranslation $mealTranslation): self
     {
         if (!$this->mealTranslations->contains($mealTranslation)) {
             $this->mealTranslations->add($mealTranslation);
             $mealTranslation->setLanguage($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealTranslation(MealTranslation $mealTranslation): self
     {
         if ($this->mealTranslations->removeElement($mealTranslation)) {
@@ -111,10 +117,10 @@ class Language
                 $mealTranslation->setLanguage(null);
             }
         }
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection<int, TagTranslation>
      */
@@ -122,17 +128,17 @@ class Language
     {
         return $this->tagTranslations;
     }
-
+    
     public function addTagTranslation(TagTranslation $tagTranslation): self
     {
         if (!$this->tagTranslations->contains($tagTranslation)) {
             $this->tagTranslations->add($tagTranslation);
             $tagTranslation->setLanguage($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeTagTranslation(TagTranslation $tagTranslation): self
     {
         if ($this->tagTranslations->removeElement($tagTranslation)) {
@@ -141,10 +147,10 @@ class Language
                 $tagTranslation->setLanguage(null);
             }
         }
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection<int, IngredientTranslation>
      */
@@ -152,17 +158,17 @@ class Language
     {
         return $this->ingredientTranslations;
     }
-
+    
     public function addIngredientTranslation(IngredientTranslation $ingredientTranslation): self
     {
         if (!$this->ingredientTranslations->contains($ingredientTranslation)) {
             $this->ingredientTranslations->add($ingredientTranslation);
             $ingredientTranslation->setLanguage($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeIngredientTranslation(IngredientTranslation $ingredientTranslation): self
     {
         if ($this->ingredientTranslations->removeElement($ingredientTranslation)) {
@@ -171,7 +177,7 @@ class Language
                 $ingredientTranslation->setLanguage(null);
             }
         }
-
+        
         return $this;
     }
 }

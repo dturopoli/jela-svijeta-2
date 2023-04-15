@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: MealRepository::class)]
 class Meal
@@ -20,32 +19,31 @@ class Meal
     #[ORM\ManyToOne(inversedBy: 'meals')]
     private ?Category $category = null;
     
-    #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $created = null;
-    
-    #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $updated = null;
-    
-    #[Gedmo\Timestampable(on: 'delete')]
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $deleted = null;
-
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTranslation::class, orphanRemoval: true)]
     private Collection $mealTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTag::class, orphanRemoval: true)]
     private Collection $mealTags;
-
+    
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealIngredient::class, orphanRemoval: true)]
     private Collection $mealIngredients;
-
+    
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+    
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updatedAt = null;
+    
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $deletedAt = null;
+    
     public function __construct()
     {
         $this->mealTranslations = new ArrayCollection();
         $this->mealTags = new ArrayCollection();
         $this->mealIngredients = new ArrayCollection();
+        $this->setCreatedAt(new \DateTime());
+        $this->setUpdatedAt(new \DateTime());
     }
     
     public function getId(): ?int
@@ -65,21 +63,6 @@ class Meal
         return $this;
     }
     
-    public function getCreated(): ?\DateTimeImmutable
-    {
-        return $this->created;
-    }
-    
-    public function getUpdated(): ?\DateTimeImmutable
-    {
-        return $this->updated;
-    }
-    
-    public function getDeleted(): ?\DateTimeImmutable
-    {
-        return $this->deleted;
-    }
-
     /**
      * @return Collection<int, MealTranslation>
      */
@@ -87,17 +70,17 @@ class Meal
     {
         return $this->mealTranslations;
     }
-
+    
     public function addMealTranslation(MealTranslation $mealTranslation): self
     {
         if (!$this->mealTranslations->contains($mealTranslation)) {
             $this->mealTranslations->add($mealTranslation);
             $mealTranslation->setMeal($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealTranslation(MealTranslation $mealTranslation): self
     {
         if ($this->mealTranslations->removeElement($mealTranslation)) {
@@ -106,10 +89,10 @@ class Meal
                 $mealTranslation->setMeal(null);
             }
         }
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection<int, MealTag>
      */
@@ -117,17 +100,17 @@ class Meal
     {
         return $this->mealTags;
     }
-
+    
     public function addMealTag(MealTag $mealTag): self
     {
         if (!$this->mealTags->contains($mealTag)) {
             $this->mealTags->add($mealTag);
             $mealTag->setMeal($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealTag(MealTag $mealTag): self
     {
         if ($this->mealTags->removeElement($mealTag)) {
@@ -136,10 +119,10 @@ class Meal
                 $mealTag->setMeal(null);
             }
         }
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection<int, MealIngredient>
      */
@@ -147,17 +130,17 @@ class Meal
     {
         return $this->mealIngredients;
     }
-
+    
     public function addMealIngredient(MealIngredient $mealIngredient): self
     {
         if (!$this->mealIngredients->contains($mealIngredient)) {
             $this->mealIngredients->add($mealIngredient);
             $mealIngredient->setMeal($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealIngredient(MealIngredient $mealIngredient): self
     {
         if ($this->mealIngredients->removeElement($mealIngredient)) {
@@ -166,7 +149,43 @@ class Meal
                 $mealIngredient->setMeal(null);
             }
         }
-
+        
+        return $this;
+    }
+    
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+    
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        
+        return $this;
+    }
+    
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+    
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        
+        return $this;
+    }
+    
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+    
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        
         return $this;
     }
 }
