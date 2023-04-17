@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Class;
 
 use Symfony\Component\HttpFoundation\Request;
 

@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use App\Class\Meta;
+use App\CustomResponse\JsonResponseCustom;
 use App\Repository\MealRepository;
 use App\Service\MealService;
-use App\Service\Meta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,8 @@ class MealController extends AbstractController
 {
     public function __construct(
         private MealRepository $mealRepository,
-        private MealService $mealService
+        private MealService $mealService,
+        private JsonResponseCustom $jsonResponse
     ) {
     }
     
@@ -31,10 +33,15 @@ class MealController extends AbstractController
                 'name' => $ingredientTranslation,
             ];
         }
-        return new JsonResponse([
-            'id' => $meal[0]->getId(),
-            'title' => $meal[0]->getMealTranslations()[0]->getTitle(),
-            'ingredients' => $ingredients,
-        ]);
+        $meta->setMetaData($request, 2);
+        
+        return $this->jsonResponse->send(
+            $meta->getMetaData(),
+            [
+                'id' => $meal[0]->getId(),
+                'title' => $meal[0]->getMealTranslations()[0]->getTitle(),
+                'ingredients' => $ingredients,
+            ],
+            []);
     }
 }
