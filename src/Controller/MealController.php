@@ -16,12 +16,11 @@ class MealController extends AbstractController
     public function __construct(
         private MealRepository $mealRepository,
         private MealService $mealService,
-        private JsonResponseCustom $jsonResponse
     ) {
     }
     
     #[Route('/meals', name: 'app_meal')]
-    public function index(Request $request, Meta $meta): JsonResponse
+    public function index(Request $request, Meta $meta): JsonResponseCustom
     {
         $meal = $this->mealRepository->findMealWithIngredients(2);
         $ingredients = [];
@@ -35,8 +34,7 @@ class MealController extends AbstractController
         }
         $meta->setMetaData($request, 2);
         
-        return $this->jsonResponse->send(
-            $meta->getMetaData(),
+        return new JsonResponseCustom($meta->getMetaData(),
             [
                 'id' => $meal[0]->getId(),
                 'title' => $meal[0]->getMealTranslations()[0]->getTitle(),
