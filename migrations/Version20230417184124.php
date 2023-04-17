@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230417130229 extends AbstractMigration
+final class Version20230417184124 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,8 @@ final class Version20230417130229 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE articles (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(128) NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE articles1 (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(128) NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, slug VARCHAR(30) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE category_translation (id INT AUTO_INCREMENT NOT NULL, category_id INT NOT NULL, language_id VARCHAR(5) NOT NULL, title VARCHAR(50) NOT NULL, INDEX IDX_3F2070412469DE2 (category_id), INDEX IDX_3F2070482F1BAF4 (language_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ingredient (id INT AUTO_INCREMENT NOT NULL, slug VARCHAR(30) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -63,6 +65,8 @@ final class Version20230417130229 extends AbstractMigration
         $this->addSql('ALTER TABLE meal_translation DROP FOREIGN KEY FK_B99343E782F1BAF4');
         $this->addSql('ALTER TABLE tag_translation DROP FOREIGN KEY FK_A8A03F8FBAD26311');
         $this->addSql('ALTER TABLE tag_translation DROP FOREIGN KEY FK_A8A03F8F82F1BAF4');
+        $this->addSql('DROP TABLE articles');
+        $this->addSql('DROP TABLE articles1');
         $this->addSql('DROP TABLE category');
         $this->addSql('DROP TABLE category_translation');
         $this->addSql('DROP TABLE ingredient');
