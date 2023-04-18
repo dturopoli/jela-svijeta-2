@@ -6,25 +6,24 @@ use App\Entity\Translation\MealTranslation;
 use App\Repository\MealRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 #[ORM\Entity(repositoryClass: MealRepository::class)]
 #[ORM\Table(name: 'meals')]
 #[Gedmo\TranslationEntity(class: MealTranslation::class)]
 class Meal
 {
     use TimestampableEntity;
+    use SoftDeleteableEntity;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $deletedAt = null;
     
     #[Gedmo\Translatable]
     #[ORM\Column(length: 50)]
@@ -55,18 +54,6 @@ class Meal
     public function getId(): ?int
     {
         return $this->id;
-    }
-    
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-    
-    public function setDeletedAt(?\DateTime $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        
-        return $this;
     }
     
     public function getTitle(): ?string
