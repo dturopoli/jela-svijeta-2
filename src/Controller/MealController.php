@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Class\Meta;
 use App\CustomResponse\JsonResponseCustom;
 use App\Entity\Article;
+use App\Entity\ArticleTranslation;
 use App\Repository\ArticleRepository;
 use App\Repository\MealRepository;
 use App\Service\MealService;
@@ -46,14 +47,20 @@ class MealController extends AbstractController
         //            ],
         //            []);
 //        $article = new Article();
-////        $article->setTranslatableLocale('en');
-//        $article->setTitle('my title in en');
-//        $article->setContent('my content in en');
+//        $article->setTranslatableLocale('hr');
+//        $article->setTitle('Naslov na hr');
+//        $article->setContent('Sadržaj na hr');
 //        $this->ar->save($article, true);
 //
         
-        $article = $this->ar->find(6);
-        $translationRepository = $this->entityManager->getRepository(Translation::class);
+        $article = $this->ar->find(8);
+        
+        $article->setTranslatableLocale('deu');
+        $article->setTitle('Auf Deutsch');
+        $article->setContent('Auf Deutsch');
+        $this->ar->save($article, true);
+        
+        $translationRepository = $this->entityManager->getRepository(ArticleTranslation::class);
         $translations = $translationRepository->findTranslations($article);
         
         return new JsonResponseCustom([], [$translations], []);

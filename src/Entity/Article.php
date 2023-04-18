@@ -10,6 +10,7 @@ use Gedmo\Translatable\Translatable;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: 'articles')]
+#[Gedmo\TranslationEntity(class: ArticleTranslation::class)]
 class Article
 {
     #[ORM\Id]
