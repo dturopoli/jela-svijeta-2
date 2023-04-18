@@ -23,7 +23,8 @@ class Ingredient
     #[ORM\Column(length: 50)]
     private ?string $title = null;
     
-    #[ORM\Column(length: 30)]
+    #[Gedmo\Slug(fields: ['title'])]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $slug = null;
     
     #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: MealIngredient::class, orphanRemoval: true)]
