@@ -2,81 +2,70 @@
 
 namespace App\Entity;
 
+use App\Entity\Translation\IngredientTranslation;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[ORM\Table(name: 'ingredients')]
+#[Gedmo\TranslationEntity(class: IngredientTranslation::class)]
 class Ingredient
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Gedmo\Translatable]
+    #[ORM\Column(length: 50)]
+    private ?string $title = null;
+    
     #[ORM\Column(length: 30)]
     private ?string $slug = null;
-
-    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: IngredientTranslation::class, orphanRemoval: true)]
-    private Collection $ingredientTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: MealIngredient::class, orphanRemoval: true)]
     private Collection $mealIngredients;
-
+    
+    #[Gedmo\Locale]
+    private $locale;
+    
     public function __construct()
     {
-        $this->ingredientTranslations = new ArrayCollection();
         $this->mealIngredients = new ArrayCollection();
     }
-
+    
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+    
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        
+        return $this;
+    }
+    
     public function getSlug(): ?string
     {
         return $this->slug;
     }
-
+    
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
+        
         return $this;
     }
-
-    /**
-     * @return Collection<int, IngredientTranslation>
-     */
-    public function getIngredientTranslations(): Collection
-    {
-        return $this->ingredientTranslations;
-    }
-
-    public function addIngredientTranslation(IngredientTranslation $ingredientTranslation): self
-    {
-        if (!$this->ingredientTranslations->contains($ingredientTranslation)) {
-            $this->ingredientTranslations->add($ingredientTranslation);
-            $ingredientTranslation->setIngredient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIngredientTranslation(IngredientTranslation $ingredientTranslation): self
-    {
-        if ($this->ingredientTranslations->removeElement($ingredientTranslation)) {
-            // set the owning side to null (unless already changed)
-            if ($ingredientTranslation->getIngredient() === $this) {
-                $ingredientTranslation->setIngredient(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection<int, MealIngredient>
      */
@@ -84,17 +73,17 @@ class Ingredient
     {
         return $this->mealIngredients;
     }
-
+    
     public function addMealIngredient(MealIngredient $mealIngredient): self
     {
         if (!$this->mealIngredients->contains($mealIngredient)) {
             $this->mealIngredients->add($mealIngredient);
             $mealIngredient->setIngredient($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealIngredient(MealIngredient $mealIngredient): self
     {
         if ($this->mealIngredients->removeElement($mealIngredient)) {
@@ -103,7 +92,12 @@ class Ingredient
                 $mealIngredient->setIngredient(null);
             }
         }
-
+        
         return $this;
+    }
+    
+    public function setTranslatableLocale($locale): void
+    {
+        $this->locale = $locale;
     }
 }

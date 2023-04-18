@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Translation\MealTranslation;
 use App\Repository\MealRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: MealRepository::class)]
+#[ORM\Table(name: 'meals')]
+#[Gedmo\TranslationEntity(class: MealTranslation::class)]
 class Meal
 {
     use TimestampableEntity;
@@ -19,11 +23,19 @@ class Meal
     #[ORM\Column]
     private ?int $id = null;
     
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $deletedAt = null;
+    
+    #[Gedmo\Translatable]
+    #[ORM\Column(length: 50)]
+    private ?string $title = null;
+    
+    #[Gedmo\Translatable]
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+    
     #[ORM\ManyToOne(inversedBy: 'meals')]
     private ?Category $category = null;
-    
-    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTranslation::class, orphanRemoval: true)]
-    private Collection $mealTranslations;
     
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealTag::class, orphanRemoval: true)]
     private Collection $mealTags;
@@ -31,13 +43,11 @@ class Meal
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: MealIngredient::class, orphanRemoval: true)]
     private Collection $mealIngredients;
     
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $deletedAt = null;
-    
+    #[Gedmo\Locale]
+    private $locale;
     
     public function __construct()
     {
-        $this->mealTranslations = new ArrayCollection();
         $this->mealTags = new ArrayCollection();
         $this->mealIngredients = new ArrayCollection();
     }
@@ -45,6 +55,42 @@ class Meal
     public function getId(): ?int
     {
         return $this->id;
+    }
+    
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+    
+    public function setDeletedAt(?\DateTime $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        
+        return $this;
+    }
+    
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+    
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        
+        return $this;
+    }
+    
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+    
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        
+        return $this;
     }
     
     public function getCategory(): ?Category
@@ -55,36 +101,6 @@ class Meal
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
-        
-        return $this;
-    }
-    
-    /**
-     * @return Collection<int, MealTranslation>
-     */
-    public function getMealTranslations(): Collection
-    {
-        return $this->mealTranslations;
-    }
-    
-    public function addMealTranslation(MealTranslation $mealTranslation): self
-    {
-        if (!$this->mealTranslations->contains($mealTranslation)) {
-            $this->mealTranslations->add($mealTranslation);
-            $mealTranslation->setMeal($this);
-        }
-        
-        return $this;
-    }
-    
-    public function removeMealTranslation(MealTranslation $mealTranslation): self
-    {
-        if ($this->mealTranslations->removeElement($mealTranslation)) {
-            // set the owning side to null (unless already changed)
-            if ($mealTranslation->getMeal() === $this) {
-                $mealTranslation->setMeal(null);
-            }
-        }
         
         return $this;
     }
@@ -149,15 +165,8 @@ class Meal
         return $this;
     }
     
-    public function getDeletedAt(): ?\DateTimeInterface
+    public function setTranslatableLocale($locale): void
     {
-        return $this->deletedAt;
-    }
-    
-    public function setDeletedAt(?\DateTime $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        
-        return $this;
+        $this->locale = $locale;
     }
 }

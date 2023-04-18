@@ -2,81 +2,70 @@
 
 namespace App\Entity;
 
+use App\Entity\Translation\TagTranslation;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
+#[ORM\Table(name: 'tags')]
+#[Gedmo\TranslationEntity(class: TagTranslation::class)]
 class Tag
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Gedmo\Translatable]
+    #[ORM\Column(length: 50)]
+    private ?string $title = null;
+    
     #[ORM\Column(length: 30)]
     private ?string $slug = null;
-
-    #[ORM\OneToMany(mappedBy: 'tag', targetEntity: TagTranslation::class, orphanRemoval: true)]
-    private Collection $tagTranslations;
-
+    
     #[ORM\OneToMany(mappedBy: 'tag', targetEntity: MealTag::class, orphanRemoval: true)]
     private Collection $mealTags;
-
+    
+    #[Gedmo\Locale]
+    private $locale;
+    
     public function __construct()
     {
-        $this->tagTranslations = new ArrayCollection();
         $this->mealTags = new ArrayCollection();
     }
-
+    
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+    
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        
+        return $this;
+    }
+    
     public function getSlug(): ?string
     {
         return $this->slug;
     }
-
+    
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
+        
         return $this;
     }
-
-    /**
-     * @return Collection<int, TagTranslation>
-     */
-    public function getTagTranslations(): Collection
-    {
-        return $this->tagTranslations;
-    }
-
-    public function addTagTranslation(TagTranslation $tagTranslation): self
-    {
-        if (!$this->tagTranslations->contains($tagTranslation)) {
-            $this->tagTranslations->add($tagTranslation);
-            $tagTranslation->setTag($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTagTranslation(TagTranslation $tagTranslation): self
-    {
-        if ($this->tagTranslations->removeElement($tagTranslation)) {
-            // set the owning side to null (unless already changed)
-            if ($tagTranslation->getTag() === $this) {
-                $tagTranslation->setTag(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection<int, MealTag>
      */
@@ -84,17 +73,17 @@ class Tag
     {
         return $this->mealTags;
     }
-
+    
     public function addMealTag(MealTag $mealTag): self
     {
         if (!$this->mealTags->contains($mealTag)) {
             $this->mealTags->add($mealTag);
             $mealTag->setTag($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeMealTag(MealTag $mealTag): self
     {
         if ($this->mealTags->removeElement($mealTag)) {
@@ -103,7 +92,12 @@ class Tag
                 $mealTag->setTag(null);
             }
         }
-
+        
         return $this;
+    }
+    
+    public function setTranslatableLocale($locale): void
+    {
+        $this->locale = $locale;
     }
 }
