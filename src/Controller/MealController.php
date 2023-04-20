@@ -26,8 +26,9 @@ class MealController extends AbstractController
     #[Route('/meals', name: 'app_meal')]
     public function index(Request $request, Meta $meta): JsonResponse
     {
-        $translations = $this->categoryTranslationRepository->findTranslationForCategories([1, 2, 3, 4], 'hr');
-
+        $categories = $this->categoryRepository->findAll();
+        $translations = $this->categoryTranslationRepository->translateCategories($categories, 'hr');
+        
         return $this->json(['translation' => $translations]);
     }
 }
