@@ -18,6 +18,7 @@ class CategoryTranslationRepository extends TranslationRepository
     
     /**
      * @param Category[] $categories
+     * @return Category[]
      */
     public function translateCategories(array $categories, string $language): array
     {

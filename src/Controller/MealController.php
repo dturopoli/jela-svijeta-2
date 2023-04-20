@@ -27,9 +27,8 @@ class MealController extends AbstractController
     public function index(Request $request, Meta $meta): JsonResponse
     {
         $categories = $this->categoryRepository->findAll();
-        $translations = $this->categoryTranslationRepository->translateCategories($categories, 'hr');
-        
-        return $this->json(['translation' => $translations]);
+        $translatedCategories = $this->categoryTranslationRepository->translateCategories($categories, 'hr');
+        return $this->json(['translation' => $translatedCategories]);
     }
 }
 //        $object = new Ingredient();
